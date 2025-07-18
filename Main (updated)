@@ -1,0 +1,133 @@
+import java.util.*;
+public class Main {
+	public static void main(String[] args) {
+	    Scanner sc = new Scanner(System.in);
+	    Student s = new Student();
+	    Admin a = new Admin();
+	    
+		ArrayList<Student> student = new ArrayList<>();
+		ArrayList<Admin> admin = new ArrayList<>();
+		
+		student.add(new Student(10000000L, "XXXXXXXX"));
+		student.add(new Student(10000001L, "XXXXXXXY"));
+		student.add(new Student(10000002L, "XXXXXXXZ"));
+		
+		admin.add(new Admin(3000L, "XXXXXXXX"));
+		admin.add(new Admin(3001L, "XXXXXXXY"));
+		admin.add(new Admin(3002L, "XXXXXXXZ"));
+		
+		//s.display(student);
+		String name = "";
+		int choice = 0;
+		long roll_no = 0L;
+		int id = 0;
+		do {
+		    System.out.println("1.User login\n2.Admin login");
+		    choice = sc.nextInt();
+		    sc.nextLine();
+		    switch(choice) {
+		        case 1:
+		            roll_no = sc.nextInt();
+		            sc.nextLine();
+		            if(s.login(student, roll_no) == -1) 
+		                System.out.println("Student doesn't exist");
+		            else 
+		                System.out.println("Successfull");
+		            break;
+		        case 2:
+		            id = sc.nextInt();
+		            sc.nextLine();
+		            if(a.login(admin, id) == -1) 
+		                System.out.println("Admin doesn't exist");
+		            else {
+		                System.out.println("Successfull");
+		                roll_no = sc.nextInt();
+		                sc.nextLine();
+		                if(a.createUser(student, roll_no) == 0) {
+		                    name = sc.nextLine();
+		                    student.add(new Student(roll_no, name));
+		                } else 
+		                    System.out.println("User already exists");
+		            }
+		            break;
+		        default:
+		            System.out.println("Wrong input... Exiting...");
+		            break;
+		    }
+		} while (choice < 3 && choice > 0);
+	}
+}
+
+class Student {
+    private long roll_no;
+    private String name;
+    private List<Book> book;
+    public long get_roll_no () {
+        return roll_no;
+    }
+    public String get_name () {
+        return name;
+    }
+    public void set_roll_no () {
+        this.roll_no = roll_no;
+    }
+    public void set_name () {
+        this.name = name;
+    }
+    Student() {}
+    Student(long roll_no, String name) {
+        this.roll_no = roll_no;
+        this.name = name;
+    }
+    public long login(List<Student> student, long roll_no) {
+        for(Student s : student) {
+            if(roll_no == s.roll_no) {
+                return s.roll_no;
+            }
+        }
+        return -1L;
+    }
+}
+
+class Book {
+    private String id;
+    private String name;
+    private String author;
+    private int stock;
+    Book(String id, String name, String author, int stock) {
+        this.id = id;
+        this.name = name;
+        this.author = author;
+        this.stock = stock;
+    }
+}
+class Admin {
+    private long id;
+    private String name;
+    Admin() {}
+    Admin(long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+    public long login(List<Admin> admin, long id) {
+        for(Admin a : admin) {
+            if(id == a.id) {
+                return a.id;
+            }
+        }
+        return -1L;
+    }
+    public int createUser(List<Student> student, long roll_no) {
+        for(Student s : student) {
+            if(roll_no == s.get_roll_no()) {
+                return -1;
+            }
+        }
+        return 0;
+    }
+    public void display(List<Student> student) {
+        for(Student s : student) {
+            System.out.println(s.get_roll_no()+" "+s.get_name());
+        }
+    }
+}
